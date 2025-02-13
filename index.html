@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #28a745;
+        }
+
+        p {
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .input-group div {
+            width: 48%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .result p {
+            margin: 5px 0;
+        }
+
+        .related-links {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .related-links a {
+            color: #28a745;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .related-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Age Calculator</h1>
+        <p>The Age Calculator can determine the age or interval between two dates. The calculated age will be displayed in years, months, weeks, days, hours, minutes, and seconds.</p>
+        
+        <div class="input-group">
+            <div>
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob">
+            </div>
+            <div>
+                <label for="target-date">Age at the Date of:</label>
+                <input type="date" id="target-date" name="target-date">
+            </div>
+        </div>
+        
+        <button onclick="calculateAge()">Calculate Age</button>
+        
+        <div id="result" class="result">
+            <!-- Result will be displayed here -->
+        </div>
+
+        <p>The age of a person can be counted differently in different cultures. This calculator is based on the most common age system. In this system, age increases on a person's birthday. For example, the age of a person who has lived for 3 years and 11 months is 3, and their age will increase to 4 on their next birthday one month later. Most western countries use this age system.</p>
+        <p>In some cultures, age is expressed by counting years with or without including the current year. For example, a person who is twenty years old is the same age as another person who is in their twenty-first year of life. In one of the traditional Chinese age systems, people are born at age 1 and their age increases up at the Traditional Chinese New Year rather than their birthday. For example, if one baby is born just one day before the Traditional Chinese New Year, 2 days later, the baby will be 2 even though he/she is only 2 days old.</p>
+        <p>In some situations, the months and day result of this age calculator may be confusing, especially when the starting date is the end of a month. For example, we count Feb. 20 to Mar. 20 to be one month. However, there are two ways to calculate the age from Feb. 28, 2022 to Mar. 31, 2022. If we consider Feb. 28 to Mar. 28 to be one month, then the result is one month and 3 days. If we consider both Feb. 28 and Mar. 31 as the end of the month, then the result is one month. Both calculation results are reasonable. Similar situations exist for dates like Apr. 30 to May 31, May 30 to June 30, etc. The confusion comes from the uneven number of days in different months. In our calculations, we use the former method.</p>
+
+        <div class="related-links">
+            <a href="#">Date Calculator</a> | <a href="#">Time Calculator</a>
+        </div>
+    </div>
+
+    <script>
+        function calculateAge() {
+            const dob = document.getElementById('dob').value;
+            const targetDate = document.getElementById('target-date').value;
+
+            if (!dob || !targetDate) {
+                alert("Please enter both dates.");
+                return;
+            }
+
+            const dobDate = new Date(dob);
+            const targetDateObj = new Date(targetDate);
+
+            if (dobDate > targetDateObj) {
+                alert("Date of Birth cannot be after the target date.");
+                return;
+            }
+
+            const ageInMilliseconds = targetDateObj - dobDate;
+            const ageInSeconds = ageInMilliseconds / 1000;
+            const ageInMinutes = ageInSeconds / 60;
+            const ageInHours = ageInMinutes / 60;
+            const ageInDays = ageInHours / 24;
+            const ageInWeeks = ageInDays / 7;
+            const ageInMonths = (targetDateObj.getFullYear() - dobDate.getFullYear()) * 12 + (targetDateObj.getMonth() - dobDate.getMonth());
+            const ageInYears = targetDateObj.getFullYear() - dobDate.getFullYear();
+
+            // Adjust for months and days
+            if (targetDateObj.getMonth() < dobDate.getMonth() || 
+                (targetDateObj.getMonth() === dobDate.getMonth() && targetDateObj.getDate() < dobDate.getDate())) {
+                ageInYears--;
+            }
+
+            const result = `
+                <p><strong>Age:</strong></p>
+                <p>${ageInYears} years, ${ageInMonths % 12} months, ${Math.floor(ageInDays % 30)} days</p>
+                <p>${Math.floor(ageInWeeks)} weeks, ${Math.floor(ageInDays)} days</p>
+                <p>${Math.floor(ageInHours)} hours, ${Math.floor(ageInMinutes)} minutes, ${Math.floor(ageInSeconds)} seconds</p>
+            `;
+
+            document.getElementById('result').innerHTML = result;
+        }
+    </script>
+</body>
+</html>
